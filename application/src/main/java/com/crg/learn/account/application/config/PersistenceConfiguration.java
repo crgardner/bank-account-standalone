@@ -8,11 +8,11 @@ import com.crg.learn.persistence.account.AccountGateway;
 
 public class PersistenceConfiguration {
 
-    AccountRepository accountGateway() {
-        return new AccountGateway();
+    public AccountRepository accountGateway() {
+        return new AccountGateway(dynamoDb());
     }
 
-    private static DynamoDBMapper setUpDb() {
+    private DynamoDBMapper dynamoDb() {
         var client = AmazonDynamoDBClientBuilder.standard().withEndpointConfiguration(
                 new AwsClientBuilder.EndpointConfiguration("http://localhost:8000", "us-east-1")).build();
 

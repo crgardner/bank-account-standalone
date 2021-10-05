@@ -1,10 +1,17 @@
 package com.crg.learn.persistence.account;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.AbstractDynamoDBMapper;
 import com.crg.learn.domain.account.*;
 
 import java.util.Optional;
 
 public class AccountGateway implements AccountRepository {
+
+    private final AbstractDynamoDBMapper dynamoDb;
+
+    public AccountGateway(AbstractDynamoDBMapper dynamoDb) {
+        this.dynamoDb = dynamoDb;
+    }
 
     @Override
     public void open(Account account) {
@@ -16,12 +23,15 @@ public class AccountGateway implements AccountRepository {
         var mapper = new PersistentAccountMapper(account);
         var persistentAccount = mapper.map();
 
+        dynamoDb.save(persistentAccount);
     }
 
     @Override
     public Optional<Account> lookup(AccountNumber accountNumber) {
-        return null;
-//        return possiblePersistentAccount.map(this::toAccount);
+        var possiblePersistentAccount = Optional.ofNullable(
+                dynamoDb.load(PersistentAccount.class, accountNumber.value()));
+
+        return possiblePersistentAccount.map(this::toAccount);
     }
 
     private Account toAccount(PersistentAccount persistentAccount) {
