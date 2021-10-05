@@ -1,4 +1,4 @@
 package com.crg.learn.controller.account.adjust;
 
-public record AdjustAccountDetails(String amount, String currency) {
+public record AdjustAccountDetails(String accountNumber, String amount, String currency) {
 }

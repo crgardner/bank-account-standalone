@@ -1,21 +1,24 @@
 package com.crg.learn.controller.account.open;
 
+import com.crg.learn.controller.view.View;
 import com.crg.learn.usecase.account.open.*;
 
 public class OpenAccountController {
     private final OpenAccountUseCase useCase;
+    private final View view;
 
-    public OpenAccountController(OpenAccountUseCase useCase) {
+    public OpenAccountController(OpenAccountUseCase useCase, View view) {
         this.useCase = useCase;
+        this.view = view;
     }
 
-    public Object openAccount(OpenAccountDetails details) {
+    public void openAccount(OpenAccountDetails details) {
         var request = requestFrom(details);
         var presenter = new OpenAccountPresenter();
 
         useCase.execute(request, presenter);
 
-        return presenter.responseEntity();
+        view.render(presenter.responseEntity());
     }
 
     private OpenAccountRequest requestFrom(OpenAccountDetails details) {

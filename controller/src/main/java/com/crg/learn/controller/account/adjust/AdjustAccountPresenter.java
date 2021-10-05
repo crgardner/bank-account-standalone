@@ -21,8 +21,8 @@ class AdjustAccountPresenter extends BasePresenter implements AdjustAccountRespo
         responseOf(viewModel);
     }
 
-    private AdjustmentViewModel viewModelFrom(EntryResponse entry, AccountResponse response) {
-        return new AdjustmentViewModel(response.accountNumber(),
+    private AdjustAccountViewModel viewModelFrom(EntryResponse entry, AccountResponse response) {
+        return new AdjustAccountViewModel(response.accountNumber(),
                                        formatted(response.balance()),
                                        response.balance().getCurrency().getCurrencyCode(),
                                        entry.transactionId(), formatted(entry.amount()));

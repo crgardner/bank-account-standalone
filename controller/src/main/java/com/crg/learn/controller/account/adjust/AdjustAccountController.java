@@ -1,26 +1,29 @@
 package com.crg.learn.controller.account.adjust;
 
+import com.crg.learn.controller.view.View;
 import com.crg.learn.usecase.account.adjust.*;
 
 public class AdjustAccountController {
     private final AdjustAccountUseCase useCase;
+    private final View view;
 
-    public AdjustAccountController(AdjustAccountUseCase useCase) {
+    public AdjustAccountController(AdjustAccountUseCase useCase, View view) {
         this.useCase = useCase;
+        this.view = view;
     }
 
-    public Object adjustAccount(String accountId,
-                                                AdjustAccountDetails details) {
-        var request = requestFrom(accountId, details);
+    public void adjustAccount(AdjustAccountDetails details) {
+        var request = requestFrom(details);
         var presenter = new AdjustAccountPresenter();
 
         useCase.execute(request, presenter);
 
-        return presenter.responseEntity();
+        view.render(presenter.responseEntity());
     }
 
-    private AdjustAccountRequest requestFrom(String accountId, AdjustAccountDetails details) {
-        return new AdjustAccountRequest(accountId, Double.parseDouble(details.amount()), details.currency());
+    private AdjustAccountRequest requestFrom(AdjustAccountDetails details) {
+        return new AdjustAccountRequest(details.accountNumber(), Double.parseDouble(details.amount()),
+                                        details.currency());
     }
 
 }

@@ -5,8 +5,6 @@ import com.crg.learn.controller.presenter.BasePresenter;
 import com.crg.learn.usecase.account.open.OpenAccountResponder;
 import com.crg.learn.usecase.shared.AccountResponse;
 
-import java.net.URI;
-
 class OpenAccountPresenter extends BasePresenter implements OpenAccountResponder {
 
     @Override
@@ -14,12 +12,8 @@ class OpenAccountPresenter extends BasePresenter implements OpenAccountResponder
         responseOf(viewModelFrom(response));
     }
 
-    private URI uriFrom(AccountResponse response) {
-        return URI.create("/banking/accounts/v1/%s".formatted(response.accountNumber()));
-    }
-
-    private AccountViewModel viewModelFrom(AccountResponse response) {
-        return new AccountViewModel(response.accountNumber(),
+    private OpenAccountViewModel viewModelFrom(AccountResponse response) {
+        return new OpenAccountViewModel(response.accountNumber(),
                                     response.ownerFirstName(),
                                     response.ownerLastName(),
                                     BasicMoneyFormatter.format(response.balance()),

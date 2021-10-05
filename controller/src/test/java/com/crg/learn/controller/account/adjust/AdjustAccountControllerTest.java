@@ -1,5 +1,6 @@
 package com.crg.learn.controller.account.adjust;
 
+import com.crg.learn.controller.view.View;
 import com.crg.learn.usecase.account.adjust.*;
 import com.crg.learn.usecase.shared.*;
 import org.junit.jupiter.api.*;
@@ -13,56 +14,63 @@ import java.util.function.Consumer;
 import static com.crg.learn.controller.test.support.BookingDates.*;
 import static com.crg.learn.controller.test.support.MonetaryAmounts.*;
 import static com.crg.learn.controller.test.support.UseCaseMocking.*;
+import static org.mockito.Mockito.*;
 
-@Disabled
 @DisplayName("AdjustAccountController")
 @ExtendWith(MockitoExtension.class)
 class AdjustAccountControllerTest {
-    private static final String CLIENT_URI = "/banking/v1/accounts/123/adjustments";
+
+    private static final String ACCOUNT_NUMBER = "123";
+    private static final String AMOUNT = "100.00";
+    private static final String BALANCE = "100.00";
+    private static final String CURRENCY = "EUR";
+    private static final String TRANSACTION_ID = "abc";
 
     @Mock
     private AdjustAccountUseCase useCase;
 
+    @Mock
+    private View view;
+
+    private AdjustAccountController controller;
+
+    @BeforeEach
+    void init() {
+        controller = new AdjustAccountController(useCase, view);
+    }
+
     @Test
     @DisplayName("controls request to adjust accounts")
-    void controlsRequestToAdjustAccounts() throws Exception {
+    void controlsRequestToAdjustAccounts() {
         prepare(useCase, toProvideCurrentAccountBalance());
 
+        controller.adjustAccount(adjustAccountDetails());
+
+        verify(view).render(expectedAdjustmentViewModel());
     }
 
-    private String adjustAccountPostBody() {
-        return """
-                {
-                    "amount": "100.00",
-                    "currency": "EUR"
-                }
-                """;
+    private AdjustAccountDetails adjustAccountDetails() {
+        return new AdjustAccountDetails(ACCOUNT_NUMBER, AMOUNT, CURRENCY);
     }
 
-    private String expectedAccountResource() {
-        return """
-                {
-                    "accountNumber": "123",
-                    "balance": "100.00",
-                    "currency": "EUR",
-                    "transactionId": "abc",
-                    "amount": "100.00"
-                }
-                """;
+    private AdjustAccountViewModel expectedAdjustmentViewModel() {
+        return new AdjustAccountViewModel(ACCOUNT_NUMBER, AMOUNT, CURRENCY, TRANSACTION_ID, BALANCE);
     }
 
     private Consumer<AdjustAccountResponder> toProvideCurrentAccountBalance() {
-        var entries = Collections.singletonList(new EntryResponse("abc", jun_21_2021(), euros_100()));
+        var entries = Collections.singletonList(new EntryResponse(TRANSACTION_ID, jun_21_2021(), euros_100()));
 
-        return responder -> responder.accept(new AccountResponse("123", "Ford", "Prefect", euros_100(), entries));
+        return responder -> responder.accept(new AccountResponse(ACCOUNT_NUMBER, "Ford", "Prefect", euros_100(), entries));
     }
 
     @Test
     @DisplayName("reports account not found")
-    void reportsAccountNotFound() throws Exception {
+    void reportsAccountNotFound() {
         prepare(useCase, toReportAccountNotFound());
 
+        controller.adjustAccount(adjustAccountDetails());
 
+        verify(view).render("not found");
     }
 
     private Consumer<AdjustAccountResponder> toReportAccountNotFound() {

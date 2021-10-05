@@ -1,18 +1,21 @@
 package com.crg.learn.controller.account.statement;
 
+import com.crg.learn.controller.view.View;
 import com.crg.learn.usecase.account.statement.*;
 
 public class PrepareStatementController {
     private final PrepareAccountStatementUseCase useCase;
+    private final View view;
 
-    public PrepareStatementController(PrepareAccountStatementUseCase useCase) {
+    public PrepareStatementController(PrepareAccountStatementUseCase useCase, View view) {
         this.useCase = useCase;
+        this.view = view;
     }
 
-    public Object prepareStatement(String accountId) {
+    public void prepareStatement(String accountNumber) {
         var presenter = new PrepareAccountStatementPresenter();
-        useCase.execute(new PrepareAccountStatementRequest(accountId), presenter);
+        useCase.execute(new PrepareAccountStatementRequest(accountNumber), presenter);
 
-        return presenter.responseEntity();
+        view.render(presenter.responseEntity());
     }
 }

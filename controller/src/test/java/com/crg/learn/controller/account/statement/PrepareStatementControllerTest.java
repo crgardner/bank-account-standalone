@@ -1,5 +1,6 @@
 package com.crg.learn.controller.account.statement;
 
+import com.crg.learn.controller.view.View;
 import com.crg.learn.usecase.account.statement.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,20 +13,34 @@ import java.util.function.Consumer;
 import static com.crg.learn.controller.test.support.BookingDates.*;
 import static com.crg.learn.controller.test.support.MonetaryAmounts.*;
 import static com.crg.learn.controller.test.support.UseCaseMocking.*;
-@Disabled
+import static org.mockito.Mockito.*;
+
 @DisplayName("PrepareStatementController")
 @ExtendWith(MockitoExtension.class)
 class PrepareStatementControllerTest {
-    private static final String CLIENT_URI = "/banking/v1/accounts/123/statement";
+    private static final String ACCOUNT_NUMBER = "123";
 
     @Mock
     private PrepareAccountStatementUseCase useCase;
 
+    @Mock
+    private View view;
+
+    private PrepareStatementController controller;
+
+    @BeforeEach
+    void init() {
+        controller = new PrepareStatementController(useCase, view);
+    }
+
     @Test
     @DisplayName("controls requests to prepare statements")
-    void controlsRequestsToPrepareStatements() throws Exception {
+    void controlsRequestsToPrepareStatements() {
         prepare(useCase, toProvideStatement());
 
+        controller.prepareStatement(ACCOUNT_NUMBER);
+
+        verify(view).render(expectedStatementViewModel());
     }
 
     private Consumer<PrepareAccountStatementResponder> toProvideStatement() {
@@ -36,30 +51,21 @@ class PrepareStatementControllerTest {
         return responder -> responder.accept(response);
     }
 
-    private String expectedStatementResource() {
-        return """
-                {
-                    "lines": [ {
-                            "date": "2021-06-21T16:00:00Z",
-                            "type": "CREDIT",
-                            "amount": "100.00",
-                            "balance": "100.00"
-                        }, {
-                            "date": "2021-07-20T10:15:00Z",
-                            "type": "DEBIT",
-                            "amount": "50.00",
-                            "balance": "50.00"
-                        }
-                   ]
-                }
-                """;
+    private StatementViewModel expectedStatementViewModel() {
+        return new StatementViewModel(List.of(
+           new Line("2021-06-21T16:00:00Z", "CREDIT", "100.00", "100.00"),
+           new Line("2021-07-20T10:15:00Z", "DEBIT", "50.00", "50.00")
+        ));
     }
 
     @Test
     @DisplayName("reports account not found")
-    void reportsAccountNotFound() throws Exception {
+    void reportsAccountNotFound() {
         prepare(useCase, toReportAccountNotFound());
 
+        controller.prepareStatement(ACCOUNT_NUMBER);
+
+        verify(view).render("not found");
     }
 
     private Consumer<PrepareAccountStatementResponder> toReportAccountNotFound() {
