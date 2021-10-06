@@ -34,20 +34,6 @@
 
     <build>
         <plugins>
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-jar-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <archive>-->
-<!--                        <manifest>-->
-<!--                            <addClasspath>true</addClasspath>-->
-<!--                            <mainClass>com.crg.learn.account.application.start.Main</mainClass>-->
-<!--                        </manifest>-->
-<!--                    </archive>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -60,35 +46,14 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <finalName>${project.parent.artifactId}</finalName>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>com.crg.learn.account.application.start.Main</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.graalvm.nativeimage</groupId>
-                <artifactId>native-image-maven-plugin</artifactId>
-                <version>21.2.0</version>
-                <configuration>
-                    <imageName>${project.parent.artifactId}</imageName>
-                    <buildArgs>
-                        <buildArg>--no-fallback</buildArg>
-                        <buildArg>-H:ReflectionConfigurationFiles=${basedir}/src/main/resources/reflect-config.json</buildArg>
-                        <buildArg>-H:ResourceConfigurationFiles=${basedir}/src/main/resources/resource-config.json</buildArg>
-                        <buildArg>--allow-incomplete-classpath</buildArg>
-                    </buildArgs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>native-image</goal>
-                        </goals>
-                        <phase>package</phase>
                     </execution>
                 </executions>
             </plugin>
@@ -109,7 +74,7 @@
                                 <resource>
                                     <directory>${basedir}/target</directory>
                                     <includes>
-                                        <include>${project.parent.artifactId}</include>
+                                        <include>${project.parent.artifactId}.jar</include>
                                     </includes>
                                 </resource>
                             </resources>
