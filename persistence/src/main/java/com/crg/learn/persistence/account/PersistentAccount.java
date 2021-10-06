@@ -4,7 +4,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.*;
 
 import java.util.*;
 
-@DynamoDBTable(tableName = "TestAccount")
+@DynamoDBTable(tableName = "BankAccount")
 public class PersistentAccount {
 
     private String holderFirstName;

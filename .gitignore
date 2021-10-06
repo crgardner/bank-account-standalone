@@ -1,3 +1,4 @@
 .idea/
 target/
 .resourceCache/
+dependency-reduced-pom.xml
