@@ -14,11 +14,9 @@ public class AdjustAccountController {
 
     public void adjustAccount(AdjustAccountDetails details) {
         var request = requestFrom(details);
-        var presenter = new AdjustAccountPresenter();
+        var presenter = new AdjustAccountPresenter(view);
 
         useCase.execute(request, presenter);
-
-        view.render(presenter.responseEntity());
     }
 
     private AdjustAccountRequest requestFrom(AdjustAccountDetails details) {

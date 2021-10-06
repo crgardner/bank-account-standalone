@@ -13,9 +13,8 @@ public class PrepareStatementController {
     }
 
     public void prepareStatement(String accountNumber) {
-        var presenter = new PrepareAccountStatementPresenter();
-        useCase.execute(new PrepareAccountStatementRequest(accountNumber), presenter);
+        var presenter = new PrepareAccountStatementPresenter(view);
 
-        view.render(presenter.responseEntity());
+        useCase.execute(new PrepareAccountStatementRequest(accountNumber), presenter);
     }
 }

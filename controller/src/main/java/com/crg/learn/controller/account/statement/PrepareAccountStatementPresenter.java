@@ -2,11 +2,16 @@ package com.crg.learn.controller.account.statement;
 
 import com.crg.learn.controller.account.shared.BasicMoneyFormatter;
 import com.crg.learn.controller.presenter.BasePresenter;
+import com.crg.learn.controller.view.View;
 import com.crg.learn.usecase.account.statement.*;
 
 import static java.util.stream.Collectors.*;
 
 class PrepareAccountStatementPresenter extends BasePresenter implements PrepareAccountStatementResponder {
+
+    PrepareAccountStatementPresenter(View view) {
+        super(view);
+    }
 
     @Override
     public void accept(PrepareStatementResponse response) {

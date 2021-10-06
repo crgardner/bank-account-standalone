@@ -31,6 +31,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <javamoney.version>1.4.2</javamoney.version>
+        <dynamodb.version>1.12.80</dynamodb.version>
         <junit.version>5.8.1</junit.version>
         <mockito.version>3.12.4</mockito.version>
         <assertj.version>3.21.0</assertj.version>
@@ -106,6 +107,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
             </plugin>
+
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>

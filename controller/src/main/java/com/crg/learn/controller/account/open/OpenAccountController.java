@@ -14,11 +14,9 @@ public class OpenAccountController {
 
     public void openAccount(OpenAccountDetails details) {
         var request = requestFrom(details);
-        var presenter = new OpenAccountPresenter();
+        var presenter = new OpenAccountPresenter(view);
 
         useCase.execute(request, presenter);
-
-        view.render(presenter.responseEntity());
     }
 
     private OpenAccountRequest requestFrom(OpenAccountDetails details) {

@@ -1,17 +1,20 @@
 package com.crg.learn.controller.presenter;
 
-public abstract class BasePresenter {
-    private Object entity;
+import com.crg.learn.controller.view.View;
 
-    public void onNotFound() {
-        entity = "not found";
+public abstract class BasePresenter {
+    private final View view;
+
+    public BasePresenter(View view) {
+        this.view = view;
     }
 
-    public Object responseEntity() {
-        return entity;
+    public void onNotFound() {
+        view.render("not found");
     }
 
     protected void responseOf(Object entity) {
-        this.entity = entity;
+        view.render(entity);
     }
+
 }
