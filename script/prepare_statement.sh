@@ -1,3 +1,3 @@
 #!/bin/sh
 
-java -jar ../target/bank-account.jar prepareStatement $1
+java -jar ../target/bank-account-standalone.jar prepareStatement $1

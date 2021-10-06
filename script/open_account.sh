@@ -1,3 +1,3 @@
 #!/bin/sh
 
-java -jar ../target/bank-account.jar openAccount Bozo Clown
+java -jar ../target/bank-account-standalone.jar openAccount Bozo Clown
