@@ -12,11 +12,11 @@ It uses a separately running instance of dynamodb local to store data.
 
 ### AWS
 
-### AWS CLI
+#### AWS CLI
 
 [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) for your platform.
 
-### DynamoDB
+#### DynamoDB
 1. [Setup Amazon DynamoDB locally](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html).
 2. Start DynamoDB with the following command:
 
@@ -62,4 +62,6 @@ $ ./prepare_statement.sh <account number from open_account.sh>
 
 ```
 Note these scripts hardcode the currency code "EUR," as the application currently supports only Euros.
+Also, if you are running behind a proxy, you may need to unset all your proxy-related environment variables in the shell.
+We observed connectivity problems to the local DynamoDB with those variables set.
 
