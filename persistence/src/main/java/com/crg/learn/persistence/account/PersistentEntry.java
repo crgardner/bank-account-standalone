@@ -1,20 +1,18 @@
 package com.crg.learn.persistence.account;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.*;
-import com.crg.learn.persistence.conversion.*;
+import com.crg.learn.persistence.conversion.MoneyConverter;
 import org.javamoney.moneta.Money;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 
 import java.time.Instant;
 import java.util.StringJoiner;
 
-@DynamoDBDocument
+@DynamoDbBean
 public class PersistentEntry {
     private Instant whenBooked;
     private Money amount;
     private String transactionId;
 
-    @DynamoDBAttribute(attributeName = "whenBooked")
-    @DynamoDBTypeConverted(converter = InstantConverter.class)
     public Instant getWhenBooked() {
         return whenBooked;
     }
@@ -23,8 +21,7 @@ public class PersistentEntry {
         this.whenBooked = whenBooked;
     }
 
-    @DynamoDBAttribute(attributeName = "amount")
-    @DynamoDBTypeConverted(converter = MoneyConverter.class)
+    @DynamoDbConvertedBy(MoneyConverter.class)
     public Money getAmount() {
         return amount;
     }
@@ -33,7 +30,6 @@ public class PersistentEntry {
         this.amount = amount;
     }
 
-    @DynamoDBAttribute(attributeName = "transactionId")
     public String getTransactionId() {
         return transactionId;
     }

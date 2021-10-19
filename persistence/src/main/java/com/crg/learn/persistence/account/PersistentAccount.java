@@ -1,18 +1,19 @@
 package com.crg.learn.persistence.account;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.*;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 
 import java.util.*;
 
-@DynamoDBTable(tableName = "BankAccount")
+@DynamoDbBean
 public class PersistentAccount {
+    public static final String TABLE_NAME = "BankAccount";
 
     private String holderFirstName;
     private String holderLastName;
     private String accountNumber;
     private List<PersistentEntry> entries = new ArrayList<>();
 
-    @DynamoDBHashKey(attributeName = "accountNumber")
+    @DynamoDbPartitionKey
     public String getAccountNumber() {
         return accountNumber;
     }
@@ -21,7 +22,6 @@ public class PersistentAccount {
         this.accountNumber = accountNumber;
     }
 
-    @DynamoDBAttribute(attributeName = "holderFirstName")
     public String getHolderFirstName() {
         return holderFirstName;
     }
@@ -30,7 +30,6 @@ public class PersistentAccount {
         this.holderFirstName = holderFirstName;
     }
 
-    @DynamoDBAttribute(attributeName = "holderLastName")
     public String getHolderLastName() {
         return holderLastName;
     }
@@ -39,7 +38,6 @@ public class PersistentAccount {
         this.holderLastName = holderLastName;
     }
 
-    @DynamoDBAttribute(attributeName = "entries")
     public List<PersistentEntry> getEntries() {
         return entries;
     }

@@ -1,21 +1,26 @@
 package com.crg.learn.account.application.config;
 
-import com.amazonaws.client.builder.AwsClientBuilder;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.crg.learn.domain.account.AccountRepository;
-import com.crg.learn.persistence.account.AccountGateway;
+import com.crg.learn.persistence.account.*;
+import software.amazon.awssdk.enhanced.dynamodb.*;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+
+import java.net.URI;
 
 public class PersistenceConfiguration {
 
     public AccountRepository accountGateway() {
-        return new AccountGateway(dynamoDb());
+        var client = dynamoDbEnhancedClient();
+        var table = TableSchema.fromClass(PersistentAccount.class);
+        var bankAccountTable = client.table("BankAccount", table);
+        return new AccountGateway(bankAccountTable);
     }
 
-    private DynamoDBMapper dynamoDb() {
-        var client = AmazonDynamoDBClientBuilder.standard().withEndpointConfiguration(
-                new AwsClientBuilder.EndpointConfiguration("http://localhost:8000", "us-east-1")).build();
+    private DynamoDbEnhancedClient dynamoDbEnhancedClient() {
+        var client = DynamoDbClient.builder().endpointOverride(URI.create("http://localhost:8000"))
+                                             .region(Region.US_EAST_1).build();
 
-        return new DynamoDBMapper(client);
+        return DynamoDbEnhancedClient.builder().dynamoDbClient(client).build();
     }
 }

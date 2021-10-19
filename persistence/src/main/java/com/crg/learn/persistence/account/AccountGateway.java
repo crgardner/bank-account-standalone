@@ -1,21 +1,24 @@
 package com.crg.learn.persistence.account;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.AbstractDynamoDBMapper;
 import com.crg.learn.domain.account.*;
+import software.amazon.awssdk.enhanced.dynamodb.*;
 
 import java.util.Optional;
 
 public class AccountGateway implements AccountRepository {
 
-    private final AbstractDynamoDBMapper dynamoDb;
+    private final DynamoDbTable<PersistentAccount> bankAccountTable;
 
-    public AccountGateway(AbstractDynamoDBMapper dynamoDb) {
-        this.dynamoDb = dynamoDb;
+    public AccountGateway(DynamoDbTable<PersistentAccount> bankAccountTable) {
+        this.bankAccountTable = bankAccountTable;
     }
 
     @Override
     public void open(Account account) {
-        update(account);
+        var mapper = new PersistentAccountMapper(account);
+        var persistentAccount = mapper.map();
+
+        bankAccountTable.putItem(persistentAccount);
     }
 
     @Override
@@ -23,13 +26,13 @@ public class AccountGateway implements AccountRepository {
         var mapper = new PersistentAccountMapper(account);
         var persistentAccount = mapper.map();
 
-        dynamoDb.save(persistentAccount);
+        bankAccountTable.updateItem(persistentAccount);
     }
 
     @Override
     public Optional<Account> lookup(AccountNumber accountNumber) {
-        var possiblePersistentAccount = Optional.ofNullable(
-                dynamoDb.load(PersistentAccount.class, accountNumber.value()));
+        var persistentAccount = bankAccountTable.getItem(Key.builder().partitionValue(accountNumber.value()).build());
+        var possiblePersistentAccount = Optional.ofNullable(persistentAccount);
 
         return possiblePersistentAccount.map(this::toAccount);
     }
