@@ -1,6 +1,6 @@
 # bank-account-standalone
 
-bank-account-standalone is a Java 16 console application used as an example of the Clean Architecture. The application allows you to:
+bank-account-standalone is a Java 17 graalvm console application used as an example of the Clean Architecture. The application allows you to:
 
 * Open accounts
 * Adjust accounts with deposits and withdrawals

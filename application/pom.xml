@@ -78,7 +78,7 @@
                     <imageName>${project.parent.artifactId}</imageName>
                     <buildArgs>
                         <buildArg>--no-fallback</buildArg>
-                    <buildArg>-H:ReflectionConfigurationFiles=${basedir}/src/main/resources/reflect-config.json</buildArg>
+                        <buildArg>-H:ReflectionConfigurationFiles=${basedir}/src/main/resources/reflect-config.json</buildArg>
                         <!--
 
                     <buildArg>-H:ResourceConfigurationFiles=${basedir}/src/main/resources/resource-config.json</buildArg>
@@ -87,7 +87,7 @@
                         <buildArg>--initialize-at-build-time=org.slf4j.LoggerFactory</buildArg>
                         <buildArg>--initialize-at-run-time=io.netty.util.internal.logging.Log4JLogger</buildArg>
                         <buildArg>--allow-incomplete-classpath</buildArg>
-<!--                        <buildArg>&#45;&#45;report-unsupported-elements-at-runtime</buildArg>-->
+                        <buildArg>--report-unsupported-elements-at-runtime</buildArg>
                     </buildArgs>
                 </configuration>
                 <executions>
